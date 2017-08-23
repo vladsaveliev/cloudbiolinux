@@ -150,7 +150,7 @@ def rsync_genomes(genome_dir, genomes, genome_indexes):
         galaxy_gid = org_remap.get(gid, gid)
         indexes = _get_galaxy_genomes(galaxy_gid, genome_dir, genomes, genome_indexes)
         _finalize_index("ucsc", indexes["ucsc"])
-        for idx, fname in indexes.iteritems():
+        for idx, fname in indexes.items():
             _finalize_index(idx, fname)
         prep_locs(galaxy_gid, indexes, {})
 
@@ -169,7 +169,7 @@ def _get_galaxy_genomes(gid, genome_dir, genomes, genome_indexes):
         if index_file:
             out[idx] = index_file
         else:
-            print "Galaxy does not support {0} for {1}".format(idx, gid)
+            print("Galaxy does not support {0} for {1}".format(idx, gid))
     return out
 
 def _rsync_genome_index(gid, idx, org_dir):

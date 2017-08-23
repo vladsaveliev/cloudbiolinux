@@ -20,6 +20,7 @@ from math import log
 from fabric.api import *
 from fabric.contrib.files import *
 from fabric.context_managers import path
+from functools import reduce
 try:
     import yaml
 except ImportError:
@@ -535,7 +536,7 @@ class CustomMaskManager:
     """Create a custom genome based on masking an existing genome.
     """
     def __init__(self, custom, config):
-        assert custom.has_key("mask")
+        assert "mask" in custom
         self._custom = custom
         self.config = config
 
@@ -544,7 +545,7 @@ class CustomMaskManager:
                                 "seq", "{0}.fa".format(self._custom["base"]))
         assert env.safe_exists(base_seq)
         mask_file = os.path.basename(self._custom["mask"])
-        ready_mask = apply("{0}-complement{1}".format, os.path.splitext(mask_file))
+        ready_mask = "{0}-complement{1}".format(*os.path.splitext(mask_file))
         out_fasta = "{0}.fa".format(self._custom["dbkey"])
         if not env.safe_exists(os.path.join(seq_dir, out_fasta)):
             if not env.safe_exists(mask_file):
@@ -741,7 +742,7 @@ def _index_hisat2(ref_file):
 
     pre_func = None
     if not os.path.exists(gtf_file):
-        print "%s not found, skipping creating the exons file." % (gtf_file)
+        print("%s not found, skipping creating the exons file." % (gtf_file))
     else:
         cmd += "--exon {exons_file} --ss {splicesites_file} "
         pre_func = _get_exons_and_splicesites
@@ -864,7 +865,7 @@ def _upload_to_s3(tarball, bucket):
     s3_key_name = os.path.join("genomes", os.path.basename(tarball))
     if not bucket.get_key(s3_key_name):
         gb_size = int(run("du -sm %s" % tarball).split()[0]) / 1000.0
-        print "Uploading %s %.1fGb" % (s3_key_name, gb_size)
+        print("Uploading %s %.1fGb" % (s3_key_name, gb_size))
         cl = ["python", upload_script, tarball, bucket.name, s3_key_name, "--public"]
         subprocess.check_call(cl)
 

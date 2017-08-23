@@ -91,7 +91,7 @@ def _perform_install(target=None, flavor=None, more_custom_add=None):
     if more_custom_add:
         if custom_add is None:
             custom_add = {}
-        for k, vs in more_custom_add.iteritems():
+        for k, vs in more_custom_add.items():
             if k in custom_add:
                 custom_add[k].extend(vs)
             else:
@@ -169,7 +169,7 @@ def _custom_installs(to_install, ignore=None, add=None):
     packages, pkg_to_group = _yaml_to_packages(pkg_config, to_install)
     packages = [p for p in packages if ignore is None or p not in ignore]
     if add is not None:
-        for key, vals in add.iteritems():
+        for key, vals in add.items():
             for v in vals:
                 pkg_to_group[v] = key
                 packages.append(v)

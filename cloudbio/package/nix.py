@@ -11,7 +11,7 @@ def _setup_nix_sources():
         target_info = run("uname -a")
         env.logger.info("Target: "+target_info)
         # find the target architecture, if not preset
-        if not env.has_key("arch"):
+        if "arch" not in env:
           env.arch = run("uname -m")
 
      # first override the path

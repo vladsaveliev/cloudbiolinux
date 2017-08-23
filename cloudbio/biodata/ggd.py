@@ -25,8 +25,8 @@ def install_recipe(base_dir, recipe_file, genome_build):
         if _has_required_programs(recipe["recipe"]["full"].get("required", [])):
             with tx_tmpdir(base_dir) as tmpdir:
                 with chdir(tmpdir):
-                    print("Running GGD recipe: %s %s %s" % (genome_build, recipe["attributes"]["name"],
-                                                            recipe["attributes"]["version"]))
+                    print(("Running GGD recipe: %s %s %s" % (genome_build, recipe["attributes"]["name"],
+                                                            recipe["attributes"]["version"])))
                     _run_recipe(tmpdir, recipe["recipe"]["full"]["recipe_cmds"],
                                 recipe["recipe"]["full"]["recipe_type"])
                 _move_files(tmpdir, base_dir, recipe["recipe"]["full"]["recipe_outfiles"])

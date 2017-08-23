@@ -84,21 +84,21 @@ def _install_configured_applications(env, tools_conf):
     # by setting galaxay_tool_defer_errors to False.
     defer_errors = env.get("galaxy_tool_defer_errors", True)
     exceptions = {}
-    for (name, tool_conf) in applications.iteritems():
+    for (name, tool_conf) in applications.items():
         if not __check_conditional(tool_conf):
             continue
 
         try:
             _install_application(name, tool_conf)
-        except BaseException, e:
+        except BaseException as e:
             exceptions[name] = e
             if not defer_errors:
                 break
 
     if exceptions:
-        for name, exception in exceptions.iteritems():
+        for name, exception in exceptions.items():
             env.logger.warn(FAILED_INSTALL_MESSAGE % name)
-        first_exception = exceptions.values()[0]
+        first_exception = list(exceptions.values())[0]
         raise first_exception
 
 
@@ -118,7 +118,7 @@ def _install_application(name, versions, tool_install_dir=None):
             bin_dirs = version_info.get("bin_dirs", ["bin"])
             env_vars = version_info.get("env_vars", {})
             provides = version_info.get("provides", [])
-            if isinstance(provides, (str, unicode, basestring)):
+            if isinstance(provides, str):
                 provides = [provides]
             for provide_conf in provides[:]:
                 if isinstance(provide_conf, dict):
@@ -159,7 +159,7 @@ def _build_tool_env(env, name, version, tool_install_dir):
     """ Build new env to have tool installed for Galaxy instead of into /usr. """
     tool_env = {"tool_version": version,
                 "galaxy_tool_install": True}
-    for key, value in env.iteritems():
+    for key, value in env.items():
         tool_env[key] = value
     if not tool_install_dir:
         tool_install_dir = os.path.join(env.galaxy_tools_dir, name, version)
@@ -215,7 +215,7 @@ def _install_galaxy_config(tool_env, bin_dirs, env_vars):
             #  Have env.sh activate virtualdirectory
             env.safe_sudo("echo '. %s/bin/activate' >> %s" % (venv_path, env_path))
         env.safe_sudo("chmod +x %s" % env_path)
-        for env_var, env_var_value in env_vars.iteritems():
+        for env_var, env_var_value in env_vars.items():
             env_var_template = Template(env_var_value)
             expanded_env_var_value = env_var_template.substitute(tool_env)
             env.safe_sudo("echo 'export %s=%s' >> %s" % (env_var, expanded_env_var_value, env_path))

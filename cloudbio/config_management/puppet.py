@@ -1,7 +1,7 @@
 from fabric.state import _AttributeDict
 from fabric.api import cd
 
-from utils import upload_config, config_dir, build_properties
+from .utils import upload_config, config_dir, build_properties
 from cloudbio.package.deb import _apt_packages
 import os
 
@@ -28,7 +28,7 @@ def _puppet_provision(env, classes):
 def _build_node_def_body(env, classes):
     contents = ""
     properties = build_properties(env, "puppet")
-    contents += "\n".join(["$%s = '%s'" % (key, value.replace("'", r"\'")) for key, value in properties.iteritems()])
+    contents += "\n".join(["$%s = '%s'" % (key, value.replace("'", r"\'")) for key, value in properties.items()])
     contents += "\n"
     contents += "\n".join([_build_class_include(env, class_name) for class_name in classes])
     return contents
@@ -46,7 +46,7 @@ def _build_class_include(env, class_name):
     """
     include_def = "class { '%s': \n" % class_name
     property_prefix = _property_prefix(class_name)
-    for name, value in env.iteritems():
+    for name, value in env.items():
         if name.startswith(property_prefix):
             property_name = name[len(property_prefix):]
             if not property_name.startswith("_"):  # else subclass property

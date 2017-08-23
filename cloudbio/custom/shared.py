@@ -9,7 +9,7 @@ from string import Template
 import sys
 import tempfile
 from tempfile import NamedTemporaryFile
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import uuid
 import subprocess
 
@@ -139,7 +139,7 @@ def _get_expected_file(url, dir_name=None, safe_tar=False, tar_file_name=None):
             (".tar",): "tar %s -xpf" % safe_tar,
             (".tar.bz2",): "tar %s -xjpf" % safe_tar,
             (".zip",): "unzip"}
-    for ext_choices, tar_cmd in exts.iteritems():
+    for ext_choices, tar_cmd in exts.items():
         for ext in ext_choices:
             if tar_file.endswith(ext):
                 if dir_name is None:
@@ -285,7 +285,7 @@ def _get_install_local(url, env, make_command, dir_name=None,
             with cd(work_dir):
                 dir_name = _fetch_and_unpack(url, dir_name=dir_name, safe_tar=safe_tar,
                     tar_file_name=tar_file_name)
-                print env.local_install, dir_name
+                print(env.local_install, dir_name)
                 if not env.safe_exists(os.path.join(env.local_install, dir_name)):
                     with cd(dir_name):
                         if post_unpack_fn:
@@ -452,7 +452,7 @@ def _get_installed_file(env, local_file):
         f = NamedTemporaryFile(delete=False)
         cloudbiolinx_repo_url = env.get("cloudbiolinux_repo_url", CBL_REPO_ROOT_URL)
         url = os.path.join(cloudbiolinx_repo_url, 'installed_files', local_file)
-        urllib.urlretrieve(url, f.name)
+        urllib.request.urlretrieve(url, f.name)
         path = f.name
     return path
 
@@ -515,7 +515,7 @@ def _set_default_config(env, install_dir, sym_dir_name="default"):
         if not replace_default:
             default_version = env.safe_sudo("basename `readlink -f %s`" % sym_dir)
             if version > default_version:  # Bug: Wouldn't work for 1.9 < 1.10
-                print "default version %s is older than version %s just installed, replacing..." % (default_version, version)
+                print("default version %s is older than version %s just installed, replacing..." % (default_version, version))
                 replace_default = True
         if replace_default:
             env.safe_sudo("rm -rf %s; ln -f -s %s %s" % (sym_dir, install_dir, sym_dir))
@@ -585,11 +585,11 @@ def _extend_env(env, defaults={}, overrides={}):
     anything in env, with values specified by ``overrides``.
     """
     new_env = {}
-    for key, value in defaults.iteritems():
+    for key, value in defaults.items():
         new_env[key] = value
-    for key, value in env.iteritems():
+    for key, value in env.items():
         new_env[key] = value
-    for key, value in overrides.iteritems():
+    for key, value in overrides.items():
         new_env[key] = value
     return new_env
 

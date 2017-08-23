@@ -68,7 +68,7 @@ class VmLauncher:
                 return self._parse_node_info(refreshed_value)
 
     def _parse_node_info(self, value):
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             return value
         else:
             return value[0]
@@ -471,7 +471,7 @@ def build_vm_launcher(options):
     provider_option_key = 'vm_provider'
     # HACK to maintain backward compatibity on vm_host option
     if not 'vm_provider' in options and 'vm_host' in options:
-        print "Using deprecated 'vm_host' setting, please change this to 'vm_provider'"
+        print("Using deprecated 'vm_host' setting, please change this to 'vm_provider'")
         provider_option_key = 'vm_host'
     driver = options.get(provider_option_key, 'aws')   # Will just fall back on EC2
     driver_options_key = driver

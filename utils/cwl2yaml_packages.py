@@ -23,4 +23,4 @@ cbl_yml[cbl_flavor]=cbl_pkgs
 
 #print cbl_yml
 
-print yaml.safe_dump(cbl_yml, default_flow_style=False, indent=4)
+print(yaml.safe_dump(cbl_yml, default_flow_style=False, indent=4))

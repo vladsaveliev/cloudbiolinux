@@ -49,13 +49,13 @@ def install_cbl_tool(tool_name, tool_version, install_dir, cbl_config={}):
                      "galaxy_tool_version": tool_version,
                      "galaxy_tool_dir": install_dir,
                      "settings": "__none__"}
-    for prop, val in deployer_args.iteritems():
+    for prop, val in deployer_args.items():
         cbl_install_command.append("--%s" % prop)
         cbl_install_command.append(val)
 
     fabric_properties = {"use_sudo": "False",
                          "galaxy_user": getuser()}
-    for prop, val in fabric_properties.iteritems():
+    for prop, val in fabric_properties.items():
         cbl_install_command.append("--fabric_property")
         cbl_install_command.append(prop)
         cbl_install_command.append("--fabric_value")

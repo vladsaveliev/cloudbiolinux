@@ -28,7 +28,7 @@ def setup_genomes(options):
     sudo("chown -R %s:%s %s" % (env.user, env.user, env.data_files))
     put("config/tool_data_table_conf.xml", "%s/tool_data_table_conf.xml" % env.galaxy_home)
     indexing_packages = ["bowtie", "bwa", "samtools"]
-    path_extensions = ":".join(map(lambda package: "/opt/galaxyTools/tools/%s/default" % package, indexing_packages))
+    path_extensions = ":".join(["/opt/galaxyTools/tools/%s/default" % package for package in indexing_packages])
     with prefix("PATH=$PATH:%s" % path_extensions):
         if 'S3' == options['genome_source']:
             install_proc = install_data_s3
@@ -77,7 +77,7 @@ def stash_genomes(where):
         elif where == 'opt':
             sudo("cp %s /opt/compressed_genomes.tar.gz" % remote_compressed_indices)
         else:
-            print "Invalid option specified for stash_genomes [%s] - valid values include download and opt." % where
+            print("Invalid option specified for stash_genomes [%s] - valid values include download and opt." % where)
 
 
 def upload_genomes(options):
@@ -151,7 +151,7 @@ def copy_runtime_properties(vm_launcher, options):
         (name, value) = runtime_property_raw.split(":")
         runtime_properties[name] = value
     export_file = ""
-    for (name, value) in runtime_properties.iteritems():
+    for (name, value) in runtime_properties.items():
         export_file = "export %s=%s\n%s" % (name, value, export_file)
     sudo('mkdir -p %s' % env.galaxy_home)
     _chown_galaxy(env, env.galaxy_home)
@@ -170,7 +170,7 @@ def wait_for_galaxy():
 
     while not "8080" in run("netstat -lant"):
         # Check if galaxy has started
-        print "Waiting for galaxy to start."
+        print("Waiting for galaxy to start.")
         time.sleep(10)
 
 

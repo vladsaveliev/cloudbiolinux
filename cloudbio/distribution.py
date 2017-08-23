@@ -147,7 +147,7 @@ def _setup_deb_general():
         env.python_version_ext = ""
     if not hasattr(env, "ruby_version_ext"):
         env.ruby_version_ext = "1.9.1"
-    if not env.has_key("java_home"):
+    if "java_home" not in env:
         # Try to determine java location from update-alternatives
         java_home = "/usr/lib/jvm/java-7-openjdk-amd64"
         with quiet():
@@ -172,7 +172,7 @@ def _setup_centos():
     #env.pip_cmd = "pip-python"
     if not hasattr(env, "ruby_version_ext"):
         env.ruby_version_ext = ""
-    if not env.has_key("java_home"):
+    if "java_home" not in env:
         env.java_home = "/etc/alternatives/java_sdk"
 
 
@@ -181,7 +181,7 @@ def _setup_scientificlinux():
     if not hasattr(env, "python_version_ext"):
         env.python_version_ext = ""
     env.pip_cmd = "pip-python"
-    if not env.has_key("java_home"):
+    if "java_home" not in env:
         env.java_home = "/etc/alternatives/java_sdk"
 
 def _setup_macosx(env):
@@ -196,7 +196,7 @@ def _setup_nixpkgs():
     # for now, Nix packages are only supported in Debian - it can
     # easily be done for others - just get Nix installed from the .rpm
     nixpkgs = False
-    if env.has_key("nixpkgs"):
+    if "nixpkgs" in env:
         if env.distribution in ["debian", "ubuntu"]:
             if env.nixpkgs == "True":
                 nixpkgs = True
@@ -215,7 +215,7 @@ def _setup_local_environment():
     """Setup a localhost environment based on system variables.
     """
     env.logger.info("Get local environment")
-    if not env.has_key("user"):
+    if "user" not in env:
         env.user = os.environ["USER"]
 
 

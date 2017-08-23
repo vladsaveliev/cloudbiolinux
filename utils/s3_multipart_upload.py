@@ -49,8 +49,8 @@ def main(transfer_file, bucket_name, s3_key_name=None, use_rr=True,
     if bucket is None:
         bucket = conn.create_bucket(bucket_name)
     if s3_has_uptodate_file(bucket, transfer_file, s3_key_name):
-        print "S3 has up to date version of %s in %s. Not transferring." % \
-            (s3_key_name, bucket.name)
+        print("S3 has up to date version of %s in %s. Not transferring." % \
+            (s3_key_name, bucket.name))
         return
     mb_size = os.path.getsize(transfer_file) / 1e6
     if mb_size < 50:
@@ -79,11 +79,11 @@ def upload_cb(complete, total):
     sys.stdout.flush()
 
 def _standard_transfer(bucket, s3_key_name, transfer_file, use_rr):
-    print " Upload with standard transfer, not multipart",
+    print(" Upload with standard transfer, not multipart", end=' ')
     new_s3_item = bucket.new_key(s3_key_name)
     new_s3_item.set_contents_from_filename(transfer_file, reduced_redundancy=use_rr,
                                            cb=upload_cb, num_cb=10)
-    print
+    print()
 
 def map_wrap(f):
     @functools.wraps(f)
@@ -112,7 +112,7 @@ def transfer_part(mp_id, mp_keyname, mp_bucketname, i, part, profile):
     """Transfer a part of a multipart upload. Designed to be run in parallel.
     """
     mp = mp_from_ids(mp_id, mp_keyname, mp_bucketname, profile)
-    print " Transferring", i, part
+    print(" Transferring", i, part)
     with open(part) as t_handle:
         mp.upload_part_from_file(t_handle, i+1)
     os.remove(part)
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     parser.add_option("--profile", dest="profile")
     (options, args) = parser.parse_args()
     if len(args) < 2:
-        print __doc__
+        print(__doc__)
         sys.exit()
     kwargs = dict(use_rr=options.use_rr, make_public=options.make_public,
                   cores=int(options.cores), profile=options.profile)

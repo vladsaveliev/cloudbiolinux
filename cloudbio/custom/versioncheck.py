@@ -20,7 +20,7 @@ def _parse_from_stdoutflag(out, flag, stdout_index=-1):
         if line.find(flag) >= 0:
             parts = line.split()
             return parts[stdout_index].strip()
-    print "Did not find version information with flag %s from: \n %s" % (flag, out)
+    print("Did not find version information with flag %s from: \n %s" % (flag, out))
     return ""
 
 def _clean_version(x):

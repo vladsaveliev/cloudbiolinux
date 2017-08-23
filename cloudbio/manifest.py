@@ -8,7 +8,7 @@ The version information provides a reproducible dump of software on a system.
 import os
 import collections
 import inspect
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import subprocess
 import sys
 
@@ -38,7 +38,7 @@ def _get_custom_pkg_info(name, fn):
     vals = dict((k, v) for k, v in inspect.getmembers(fn))
     code = inspect.getsourcelines(fn)
     if vals["__name__"] == "decorator":
-        fn = [x for x in fn.func_closure if not isinstance(x.cell_contents, str)][0].cell_contents
+        fn = [x for x in fn.__closure__ if not isinstance(x.cell_contents, str)][0].cell_contents
         vals = dict((k, v) for k, v in inspect.getmembers(fn))
         code = inspect.getsourcelines(fn)
     version = ""
@@ -114,7 +114,7 @@ def get_r_pkg_info():
         out = ""
     pkg_raw_list = []
     for line in out.split("\n")[1:]:
-        pkg_raw_list.append(filter(None, [entry.strip(' ') for entry in line.split('"')]))
+        pkg_raw_list.append([_f for _f in [entry.strip(' ') for entry in line.split('"')] if _f])
     for pkg in pkg_raw_list:
         if len(pkg) > 2:
             yield {"name": pkg[0], "version": pkg[1],
@@ -180,7 +180,7 @@ def _get_pkg_popcon():
     """
     url = "http://popcon.debian.org/by_vote"
     popcon = {}
-    for line in (l for l in urllib2.urlopen(url) if not l.startswith(("#", "--"))):
+    for line in (l for l in urllib.request.urlopen(url) if not l.startswith(("#", "--"))):
         parts = line.split()
         popcon[parts[1]] = int(parts[3])
     return popcon

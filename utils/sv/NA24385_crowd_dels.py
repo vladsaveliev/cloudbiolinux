@@ -18,7 +18,7 @@ for line in r.iter_lines():
     if not header:
         header = line.rstrip().split()
     else:
-        cur = dict(zip(header, line.rstrip().split()))
+        cur = dict(list(zip(header, line.rstrip().split())))
         pos = (int(cur["chrom"].replace("chr", "")), int(cur["start"]))
         probs = sorted([(float(cur["%s_prob" % c]), c) for c in ["CN0", "CN1", "CN2"]], reverse=True)
         cn = probs[0][-1]

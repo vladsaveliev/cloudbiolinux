@@ -6,16 +6,16 @@ This needs to run on a machine with an apt system to check for the existance of
 package names.
 """
 import sys
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import re
 import subprocess
-import StringIO
+import io
 
 from BeautifulSoup import BeautifulSoup
 
 def main():
     url = "http://www.jcvi.org/cms/research/projects/jcvi-cloud-biolinux/included-software"
-    in_handle = urllib2.urlopen(url)
+    in_handle = urllib.request.urlopen(url)
     soup = BeautifulSoup(in_handle)
     tables = soup.findAll("table", {"class": "contenttable"})
     to_check = []
@@ -28,7 +28,7 @@ def main():
     packages = [get_package(n) for n in to_check]
     not_ported = [to_check[i] for i, p in enumerate(packages) if p is None]
     packages = [p for p in packages if p]
-    print len(to_check), len(packages)
+    print(len(to_check), len(packages))
     with open("biolinux-packages.txt", "w") as out_handle:
         out_handle.write("\n".join(sorted(packages)))
     with open("biolinux-missing.txt", "w") as out_handle:
@@ -40,13 +40,13 @@ def get_package(pname):
     # custom hacking for painfully general names that take forever
     if pname in ["act", "documentation"]:
         pname = "bio-linux-%s" % pname
-    print 'In', pname
+    print('In', pname)
     cl = subprocess.Popen(["apt-cache", "search", pname], stdout=subprocess.PIPE)
     cl.wait()
     for line in cl.stdout.read().split():
         package = line.split()[0]
         if package == pname or package == "bio-linux-%s" % pname:
-            print 'Out', package
+            print('Out', package)
             return package
     return None
 

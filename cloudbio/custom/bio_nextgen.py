@@ -7,7 +7,7 @@ from fabric.api import *
 from fabric.contrib.files import *
 import yaml
 
-from shared import (_if_not_installed, _make_tmp_dir,
+from .shared import (_if_not_installed, _make_tmp_dir,
                     _get_install, _get_install_local, _make_copy, _configure_make,
                     _java_install, _python_cmd,
                     _symlinked_java_version_dir, _fetch_and_unpack, _python_make,
@@ -126,7 +126,7 @@ def install_perm(env):
         with settings(hide('warnings', 'running', 'stdout', 'stderr'),
                       warn_only=True):
             result = env.safe_run("%s -v" % gcc_cmd)
-        print result.return_code
+        print(result.return_code)
         if result.return_code == 0:
             env.safe_sed("makefile", "g\+\+", gcc_cmd)
     _get_install(url, env, _make_copy("ls -1 perm", gcc44_makefile_patch))

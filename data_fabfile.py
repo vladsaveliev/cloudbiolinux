@@ -46,7 +46,7 @@ def _add_defaults():
     conf_file = "tool_data_table_conf.xml"
     env.tool_data_table_conf_file = os.path.join(os.path.dirname(__file__),
                                                  "installed_files", conf_file)
-    if not env.has_key("distribution"):
+    if "distribution" not in env:
         config_file = os.path.join(env.config_dir, "fabricrc.txt")
         if os.path.exists(config_file):
             env.update(load_settings(config_file))

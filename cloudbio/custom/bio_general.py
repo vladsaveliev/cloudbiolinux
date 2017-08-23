@@ -6,7 +6,7 @@ from fabric.api import *
 from fabric.contrib.files import *
 
 from cloudbio.custom import shared
-from shared import (_if_not_installed, _get_install, _configure_make, _java_install,
+from .shared import (_if_not_installed, _get_install, _configure_make, _java_install,
                     _make_tmp_dir)
 
 def install_anaconda(env):

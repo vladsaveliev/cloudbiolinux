@@ -16,7 +16,7 @@ def build_properties(env, prefix, overrides={}):
     overrides = dict(overrides)
 
     # Load fabric environment properties into properties.
-    for key, value in env.iteritems():
+    for key, value in env.items():
         # Skip invalid properties.
         if key in overrides or not isinstance(value, str):
             continue
@@ -41,8 +41,8 @@ def upload_config(config, config_folder_names=[], config_files={}):
     Heavily based on upload procedure from fabric-provision:
     https://github.com/caffeinehit/fabric-provision/blob/master/provision/__init__.py
     """
-    names = config_folder_names + config_files.keys()
-    ctx = dict(map(lambda name: (name, '%s/%s' % (config.path, name)), names))
+    names = config_folder_names + list(config_files.keys())
+    ctx = dict([(name, '%s/%s' % (config.path, name)) for name in names])
 
     tmpfolder = mkdtemp()
 
@@ -67,12 +67,12 @@ def upload_config(config, config_folder_names=[], config_files={}):
     for what in config_folder_names:
         map(lambda f: copyfolder(f, what), getattr(config, what))
 
-    folder_paths = " ".join(map(lambda folder_name: "./%s" % folder_name, config_folder_names))
+    folder_paths = " ".join(["./%s" % folder_name for folder_name in config_folder_names])
     local('cd %s && tar -f config_dir.tgz -cz %s' % (tmpfolder, folder_paths))
 
     # Get rid of old files
     with settings(warn_only=True):
-        map(lambda what: sudo("rm -rf '%s'" % ctx[what]), ctx.keys())
+        map(lambda what: sudo("rm -rf '%s'" % ctx[what]), list(ctx.keys()))
 
     # Upload
     put('%s/config_dir.tgz' % tmpfolder, config.path, use_sudo=True)
@@ -80,5 +80,5 @@ def upload_config(config, config_folder_names=[], config_files={}):
     with cd(config.path):
         sudo('tar -xf config_dir.tgz')
 
-    for file, contents in config_files.iteritems():
+    for file, contents in config_files.items():
         files.append(ctx[file], contents, use_sudo=True)

@@ -136,7 +136,7 @@ def _parse_fabricrc(env):
     env.tool_data_table_conf_file = os.path.join(env.config_dir, "..",
                                                  "installed_files",
                                                  "tool_data_table_conf.xml")
-    if not env.has_key("distribution") and not env.has_key("system_install"):
+    if "distribution" not in env and "system_install" not in env:
         env.logger.info("Reading default fabricrc.txt")
         env.update(load_settings(get_config_file(env, "fabricrc.txt").base))
     if "shell_config" not in env:

@@ -19,7 +19,7 @@ def main(bucket_name):
     bucket = conn.get_bucket("biodata")
     for s3_item in bucket.list("genomes/"):
         if s3_item.name.endswith(".gz"):
-            print "xzipping", s3_item.name
+            print("xzipping", s3_item.name)
             local_file = os.path.basename(s3_item.name)
             local_xz = "%s.xz" % os.path.splitext(local_file)[0]
             if not os.path.exists(local_xz):
@@ -41,7 +41,7 @@ def download_parallel(url):
             #           shell=False)
 
 def swap_s3_item(xz_file, bucket, orig_s3_item):
-    print " Uploading to S3"
+    print(" Uploading to S3")
     assert os.path.exists(xz_file)
     new_name = orig_s3_item.name.replace(".gz", ".xz")
     upload_script = os.path.join(os.path.dirname(__file__), "s3_multipart_upload.py")

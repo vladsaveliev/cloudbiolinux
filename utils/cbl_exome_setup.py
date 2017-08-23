@@ -15,7 +15,7 @@ import shutil
 import socket
 import subprocess
 import contextlib
-import ConfigParser
+import configparser
 
 import yaml
 
@@ -99,7 +99,7 @@ def read_pp_config(fname):
 def read_ampq_config(fname):
     """Get AMQP username and password from configuration file
     """
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.read(fname)
     return (config.get("galaxy_amqp", "userid"),
             config.get("galaxy_amqp", "password"))

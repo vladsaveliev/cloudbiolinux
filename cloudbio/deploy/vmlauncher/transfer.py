@@ -5,7 +5,7 @@ from operator import itemgetter
 from sys import exit
 from threading import Thread
 from threading import Condition
-from Queue import Queue
+from queue import Queue
 
 from fabric.api import local, put, sudo, cd
 from fabric.colors import red
@@ -65,7 +65,7 @@ class TransferTarget:
         self.local_temp = transfer_manager.local_temp
         basename = os.path.basename(file)
         if len(basename) < 1:
-            print red(Exception("Invalid file specified - %s" % file))
+            print(red(Exception("Invalid file specified - %s" % file)))
             exit(-1)
         self.basename = basename
 
@@ -234,8 +234,8 @@ class FileTransferManager:
                     simple_chunk = transfer_target.build_simple_chunk()
                     self._enqueue_chunk(simple_chunk)
             except Exception as e:
-                print red("Failed to compress a file to transfer")
-                print red(e)
+                print(red("Failed to compress a file to transfer"))
+                print(red(e))
             finally:
                 self.compress_queue.task_done()
 
@@ -265,8 +265,8 @@ class FileTransferManager:
                         sudo("cat '%s'_part* > '%s'" % (basename, basename), user=self.transfer_as)
                         sudo("rm '%s_part'*" % (basename), user=self.transfer_as)
             except Exception as e:
-                print red("Failed to decompress or unsplit a transfered file.")
-                print red(e)
+                print(red("Failed to decompress or unsplit a transfered file."))
+                print(red(e))
             finally:
                 self.decompress_queue.task_done()
 
@@ -281,8 +281,8 @@ class FileTransferManager:
                 if not transfer_target.split_up():
                     self.decompress_queue.put(transfer_target)
             except Exception as e:
-                print red("Failed to upload a file.")
-                print red(e)
+                print(red("Failed to upload a file."))
+                print(red(e))
             finally:
                 transfer_chunk.clean_up()
                 self.transfer_queue.task_done()
@@ -298,16 +298,16 @@ class FileTransferManager:
                 self._chown(destination)
             except BaseException as e:
                 retry = True
-                print red(e)
-                print red("Failed to upload %s on attempt %d" % (source, attempt + 1))
+                print(red(e))
+                print(red("Failed to upload %s on attempt %d" % (source, attempt + 1)))
             except:
                 # Should never get here, delete this block when more confident
                 retry = True
-                print red("Failed to upload %s on attempt %d" % (source, attempt + 1))
+                print(red("Failed to upload %s on attempt %d" % (source, attempt + 1)))
             finally:
                 if not retry:
                     return
-        print red("Failed to transfer file %s, exiting..." % source)
+        print(red("Failed to transfer file %s, exiting..." % source))
         exit(-1)
 
     def _enqueue_chunk(self, transfer_chunk):

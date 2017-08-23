@@ -11,9 +11,9 @@ def images_and_snapshots(owner):
     images32 = _sorted_images(images, "CloudBioLinux 32")
     images64 = _sorted_images(images, "CloudBioLinux 64")
     datalibs = _data_libraries(conn, owner)
-    print images32
-    print images64
-    print datalibs
+    print(images32)
+    print(images64)
+    print(datalibs)
 
 def _data_libraries(conn, owner):
     library_types = collections.defaultdict(list)
@@ -24,7 +24,7 @@ def _data_libraries(conn, owner):
             data_type = " ".join(snap.description.split()[2:-1])
             library_types[data_type].append(snap)
     final = dict()
-    for name, snaps in library_types.iteritems():
+    for name, snaps in library_types.items():
         snaps = [(s.description, s) for s in snaps]
         snaps.sort(reverse=True)
         final[name] = [(s.id, d) for (d, s) in snaps]

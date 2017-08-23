@@ -5,7 +5,7 @@ import os
 from fabric.api import *
 from fabric.contrib.files import *
 
-from shared import (_if_not_installed, _make_tmp_dir)
+from .shared import (_if_not_installed, _make_tmp_dir)
 from cloudbio.custom import shared
 
 @_if_not_installed("lein -v")

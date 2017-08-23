@@ -5,7 +5,7 @@ from cloudbio.galaxy.utils import _chown_galaxy
 
 from fabric.contrib.files import *
 
-from shared import _write_to_file
+from .shared import _write_to_file
 
 
 def install_protvis(env):
@@ -38,7 +38,7 @@ def install_protvis(env):
     _write_to_file('''GALAXY_ROOT = "%s"
 PATH_WHITELIST = ["%s/files/", "%s"]
 CONVERTED_FILES = "%s"
-''' % (env.galaxy_home, galaxy_data_dir, protvis_converted_files_dir, protvis_converted_files_dir), "%s/conf.py" % protvis_home, 0755)
+''' % (env.galaxy_home, galaxy_data_dir, protvis_converted_files_dir, protvis_converted_files_dir), "%s/conf.py" % protvis_home, 0o755)
     _setup_protvis_service(env)
 
 

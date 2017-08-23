@@ -47,7 +47,7 @@ def deploy(options):
 
     if _do_perform_action("list", actions):
         for node in vm_launcher.list():
-            print "Active node with uuid %s <%s>" % (node.uuid, node)
+            print(("Active node with uuid %s <%s>" % (node.uuid, node)))
 
     if _do_perform_action("destroy", actions):
         target_name = options["hostname"]
@@ -60,7 +60,7 @@ def deploy(options):
 
     # Do we have remaining actions requiring an vm?
     if len(actions) > 0:
-        print 'Setting up virtual machine'
+        print('Setting up virtual machine')
         vm_launcher.boot_and_connect()
         _setup_vm(options, vm_launcher, actions)
 
@@ -127,7 +127,7 @@ def _setup_vm(options, vm_launcher, actions):
                 name = eval_template(env, name_template)
                 vm_launcher.package(name=name)
             if not destroy_on_complete and hasattr(vm_launcher, "uuid"):
-                print 'Your instance (%s) is waiting at http://%s' % (vm_launcher.uuid, ip)
+                print(('Your instance (%s) is waiting at http://%s' % (vm_launcher.uuid, ip)))
     finally:
         if destroy_on_complete:
             vm_launcher.destroy()
@@ -208,7 +208,7 @@ def _setup_cloudbiolinux_fabric_properties(env, options):
         # Let cloudbiolinux find out default file based on flavor, dist, etc...
         _parse_fabricrc(env)
     overrides = options.get("fabricrc_overrides", {})
-    for key, value in overrides.iteritems():
+    for key, value in overrides.items():
         # yaml parses bools, wouldn't be expected coming out of a fabricrc
         # file so replace everything with a string.
         if isinstance(value, bool):
@@ -234,7 +234,7 @@ def configure_ssh_key(options):
         put(local_path=key_file,
             remote_path="/home/%s/.ssh/%s" % (env.galaxy_user, os.path.basename(key_file)),
             use_sudo=True,
-            mode=0600)
+            mode=0o600)
         _chown_galaxy(env, "/home/%s/.ssh" % env.galaxy_user)
 
 
@@ -358,7 +358,7 @@ def __get_plugin_actions(env, action_type):
     actions = {}
     for plugin_module in __get_plugin_modules(env):
         if hasattr(plugin_module, action_type):
-            for action_name, action_function in getattr(plugin_module, action_type).iteritems():
+            for action_name, action_function in getattr(plugin_module, action_type).items():
                 actions[action_name] = action_function
     return actions
 
@@ -375,7 +375,7 @@ def __get_plugin_modules(env):
                 for comp in plugin_module_name.split(".")[1:]:
                     module = getattr(module, comp)
                 modules.append(module)
-            except BaseException, exception:
+            except BaseException as exception:
                 exception_str = str(exception)
                 message = "%s rule module could not be loaded: %s" % (plugin_module_name, exception_str)
                 env.logger.warn(message)

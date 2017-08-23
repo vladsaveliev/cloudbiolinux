@@ -45,7 +45,7 @@ def install_galaxy_vcr(env):
 		uwi_string = _get_file_string(uwi_file,galaxy_central)
 		
 		if (uwi_string.find("sanitize_all_html") != -1):
-			print("Setting sanitize_all_html in %s to False." % uwi_file)
+			print(("Setting sanitize_all_html in %s to False." % uwi_file))
 			sudo("sed -i '/^sanitize_all_html/c\sanitize_all_html = False' %s" % uwi_file)
 		else:
 			print("No sanitize_all_html present! Adding...")
@@ -95,19 +95,19 @@ def _initialize_area_viral():
 	viral_tars["BINARIES_TARBALL"] = "BINARIES.tgz"
 	viral_tars["PERL_TARBALL"] = "PERL.tgz"
 	
-	print("user:   %(user)s" % env)
-	print("host:   %(host)s" % env)
-	print("ROOT DIR:   %(VIRAL_ROOT_DIR)s" % env)
-	print("VIRAL ASSEMBLY SCRIPT:   %(VIRAL_SCRIPT)s" % env)
+	print(("user:   %(user)s" % env))
+	print(("host:   %(host)s" % env))
+	print(("ROOT DIR:   %(VIRAL_ROOT_DIR)s" % env))
+	print(("VIRAL ASSEMBLY SCRIPT:   %(VIRAL_SCRIPT)s" % env))
 	for name in sorted(viral_dirs.keys()):
 		if not _path_is_dir(viral_dirs[name]):
 			sudo("mkdir -p %s" % viral_dirs[name])
-		print("%s:   %s" % (name,viral_dirs[name]))
-	print("VIRAL ASSEMBLY REFS FILES: %(VIRAL_REF_FILES)s" % env)
+		print(("%s:   %s" % (name,viral_dirs[name])))
+	print(("VIRAL ASSEMBLY REFS FILES: %(VIRAL_REF_FILES)s" % env))
 	for name in sorted(viral_urls.keys()):
-		print("%s:   %s" % (name,viral_urls[name]))
+		print(("%s:   %s" % (name,viral_urls[name])))
 	for name in sorted(viral_tars.keys()):
-		print("%s:   %s" % (name,viral_tars[name]))
+		print(("%s:   %s" % (name,viral_tars[name])))
 
 def _add_tools_viral():
 	with cd("/home/ubuntu/"):
@@ -116,7 +116,7 @@ def _add_tools_viral():
 		bashrc_string = _get_file_string(bashrc_file,"/home/ubuntu/")
 		
 		if (bashrc_string.find("DEBIAN_FRONTEND") != -1):
-			print("Setting DEBIAN_FRONTEND in %s to noninteractive." % bashrc_file)
+			print(("Setting DEBIAN_FRONTEND in %s to noninteractive." % bashrc_file))
 			sudo("sed -i \"/DEBIAN_FRONTEND/c\DEBIAN_FRONTEND=noninteractive\" %s/%s" % ("/home/ubuntu",bashrc_file))
 		else:
 			print("No DEBIAN_FRONTEND present! Adding...")
@@ -171,7 +171,7 @@ def install_viralvigor_test(env):
 				-O %s/westnile \
 				> %s/westnile_test_run.log 2>&1 \
 				""") % (vigor_dirs["VIGOR_RUNTIME_DIR"],vigor_dirs["VIGOR_SAMPLE_DATA_DIR"],vigor_dirs["VIGOR_TEST_OUTPUT_DIR"],env.VIGOR_SCRATCH_DIR)
-		print("DEBUG: cmd[%s]" % cmd)
+		print(("DEBUG: cmd[%s]" % cmd))
 		run(cmd)
 	finally:
 		disconnect_all()
@@ -184,7 +184,7 @@ def install_viralvigor_validate(env):
 		with settings(hide("running","stdout")):
 			results = run("""diff -Bwr %s %s || echo 'VALIDATION FAILED'""" % (vigor_dirs["VIGOR_SAMPLE_DATA_DIR"],vigor_dirs["VIGOR_TEST_OUTPUT_DIR"]))
 		if results:
-			print("\n\nValidation Failed:\n\n%s\n" % results)
+			print(("\n\nValidation Failed:\n\n%s\n" % results))
 	finally:
 		disconnect_all()
 
@@ -227,20 +227,20 @@ def _initialize_area_vigor():
 	vigor_tars["BLAST_TAR_FILENAME"] = "%s-%s.tar.gz"                        % (vigor_names["BLAST_NAME"],env.ARCH)
 	vigor_tars["CLUSTALW_TAR_FILENAME"] = "%s-%s.deb"                        % (vigor_names["CLUSTALW_NAME"],env.ARCH)
 	
-	print("user:   %(user)s" % env)
-	print("host:   %(host)s" % env)
-	print("ARCH:   %(ARCH)s" % env)
-	print("ROOT DIR:   %(VIGOR_ROOT_DIR)s" % env)
-	print("SCRATCH DIR:   %(VIGOR_SCRATCH_DIR)s" % env)
+	print(("user:   %(user)s" % env))
+	print(("host:   %(host)s" % env))
+	print(("ARCH:   %(ARCH)s" % env))
+	print(("ROOT DIR:   %(VIGOR_ROOT_DIR)s" % env))
+	print(("SCRATCH DIR:   %(VIGOR_SCRATCH_DIR)s" % env))
 	for name in sorted(vigor_dirs.keys()):
-		print("%s:   %s" % (name,vigor_dirs[name]))
+		print(("%s:   %s" % (name,vigor_dirs[name])))
 	for name in sorted(vigor_urls.keys()):
-		print("%s:   %s" % (name,vigor_urls[name]))
-	print("BLAST_NAME:   %s" % vigor_names["BLAST_NAME"])
-	print("CLUSTALW_NAME:   %s" % vigor_names["CLUSTALW_NAME"])
-	print("VIGOR_NAME:   %s" % vigor_names["VIGOR_NAME"])
+		print(("%s:   %s" % (name,vigor_urls[name])))
+	print(("BLAST_NAME:   %s" % vigor_names["BLAST_NAME"]))
+	print(("CLUSTALW_NAME:   %s" % vigor_names["CLUSTALW_NAME"]))
+	print(("VIGOR_NAME:   %s" % vigor_names["VIGOR_NAME"]))
 	for name in sorted(vigor_tars.keys()):
-		print("%s:   %s" % (name,vigor_tars[name]))
+		print(("%s:   %s" % (name,vigor_tars[name])))
 
 def _initialize_host():
 	local("ssh-keygen -R %(host)s" % env)
@@ -269,7 +269,7 @@ def _add_tools_vigor():
 
 def _fix_etc_hosts():
 	internal_ip = sudo("hostname")
-	print("internal_ip[%s]" % internal_ip)
+	print(("internal_ip[%s]" % internal_ip))
 	filespec = "/etc/hosts"
 	sudo("echo '127.0.0.1 %s' >> %s" % (internal_ip, filespec))
 
@@ -389,7 +389,7 @@ def _remove_dir(dirspec):
 		_unlock_dir(dirspec)
 		sudo("rm -rf %s" % dirspec)
 	else:
-		print("DEBUG: _remove_dir[%s] -- NOT FOUND" % dirspec)
+		print(("DEBUG: _remove_dir[%s] -- NOT FOUND" % dirspec))
 
 def _unlock_dir(dirspec):
 	with settings(hide("running","stdout")):

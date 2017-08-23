@@ -6,7 +6,7 @@ from fabric.contrib import files
 from fabric.state import _AttributeDict
 
 from cloudbio.flavor.config import get_config_file
-from utils import build_properties, upload_config, config_dir
+from .utils import build_properties, upload_config, config_dir
 
 
 # Code based heavily on fabric-provision. https://github.com/caffeinehit/fabric-provision
@@ -107,5 +107,5 @@ def _parse_json(filename):
     with open(filename) as f:
         lines = f.readlines()
         content = ''.join([line for line in lines if not line.startswith('//')])
-        print content
+        print(content)
         return json.loads(content)

@@ -139,7 +139,7 @@ def local_contains(filename, text, exact=False, use_sudo=False, escape=True,
 def local_append(filename, text, use_sudo=False, partial=False, escape=True, shell=False):
     func = use_sudo and env.safe_sudo or env.safe_run
     # Normalize non-list input to be a list
-    if isinstance(text, basestring):
+    if isinstance(text, str):
         text = [text]
     for line in text:
         regex = '^' + _escape_for_regex(line)  + ('' if partial else '$')
@@ -178,7 +178,7 @@ def configure_runsudo(env):
         env.safe_exists = exists
         env.safe_run = run
         env.safe_run_output = run_output
-    if isinstance(getattr(env, "use_sudo", "true"), basestring):
+    if isinstance(getattr(env, "use_sudo", "true"), str):
         if getattr(env, "use_sudo", "true").lower() in ["true", "yes"]:
             env.use_sudo = True
             if env.is_local:

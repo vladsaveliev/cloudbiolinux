@@ -7,7 +7,7 @@ import re
 from fabric.api import cd
 from fabric.context_managers import prefix
 
-from shared import (_if_not_installed, _make_tmp_dir,
+from .shared import (_if_not_installed, _make_tmp_dir,
                     _get_install, _make_copy,
                     _java_install, _symlinked_java_version_dir,
                     _get_bin_dir, _get_install_subdir,

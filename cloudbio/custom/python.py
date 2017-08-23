@@ -5,7 +5,7 @@ import os
 from fabric.api import *
 from fabric.contrib.files import *
 
-from shared import (_if_not_python_lib, _get_install, _python_make, _pip_cmd,
+from .shared import (_if_not_python_lib, _get_install, _python_make, _pip_cmd,
                     _is_anaconda)
 
 @_if_not_python_lib("bx")

@@ -64,7 +64,7 @@ def fix_chrom(parts):
 
 def get_file(x, ftp_dir, conn):
     if not os.path.exists(x):
-        print "Retrieving %s" % x
+        print("Retrieving %s" % x)
         with open(x, "wb") as out_handle:
             conn = ftplib.FTP(FTP, "anonymous", "me@example.com")
             conn.cwd(ftp_dir)
@@ -88,7 +88,7 @@ def karyotype_sort(xs):
         except ValueError:
             pass
         # unplaced at the very end
-        if isinstance(parts[0], basestring) and parts[0].startswith(("Un", "Alt", "Multi", "NotOn")):
+        if isinstance(parts[0], str) and parts[0].startswith(("Un", "Alt", "Multi", "NotOn")):
             parts.insert(0, "z")
         # mitochondrial special case -- after X/Y
         elif parts[0] in ["M", "MT"]:
@@ -101,7 +101,7 @@ def karyotype_sort(xs):
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="Prepare a dbSNP file from NCBI.")
-    parser.add_argument("org_build", choices=REMOTES.keys(),
+    parser.add_argument("org_build", choices=list(REMOTES.keys()),
                         help="genome build")
     args = parser.parse_args()
     main(args.org_build)

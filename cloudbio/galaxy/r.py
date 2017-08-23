@@ -33,6 +33,6 @@ def _install_r_packages(tools_conf):
 
 def _concat_strings(strings):
     if strings:
-        return ", ".join(map(lambda x: '"%s"' % x, strings))
+        return ", ".join(['"%s"' % x for x in strings])
     else:
         return ""

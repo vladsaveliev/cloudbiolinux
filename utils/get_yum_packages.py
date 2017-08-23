@@ -9,7 +9,7 @@ import sys
 import subprocess
 import platform
 from contextlib import nested
-import StringIO
+import io
 
 def main(orig_file):
     new_file = "%s-yum%s" % os.path.splitext(orig_file)
@@ -25,7 +25,7 @@ def main(orig_file):
                 new_handle.write(line)
 
 def get_yum_package(pname):
-    print 'In', pname
+    print('In', pname)
     # hacks for package names that cause it to hang
     if pname in ["ri"]:
         return None

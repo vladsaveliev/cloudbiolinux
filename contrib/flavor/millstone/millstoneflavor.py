@@ -8,7 +8,7 @@ from fabric.contrib.files import *
 from cloudbio.custom import shared
 from cloudbio.flavor import Flavor
 
-from installer import install_millstone
+from .installer import install_millstone
 
 
 class MillstoneFlavor(Flavor):

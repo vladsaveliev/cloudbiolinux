@@ -268,13 +268,13 @@ def _configure_galaxy_options(env, option_dict=None, prefix="galaxy_universe_"):
         option_dict = env
 
     option_priority = env.get("galaxy_conf_priority", "200")
-    for key, value in option_dict.iteritems():
+    for key, value in option_dict.items():
         if key.startswith(prefix):
             key = key[len(prefix):]
             conf_file_name = "%s_override_%s.ini" % (option_priority, key)
             conf_file = os.path.join(galaxy_conf_directory, conf_file_name)
             contents = "[app:main]\n%s=%s" % (key, value)
-            _write_to_file(contents, conf_file, 0700)
+            _write_to_file(contents, conf_file, 0o700)
             _chown_galaxy(env, conf_file)
 
 
@@ -460,7 +460,7 @@ def _get_nginx_modules(env):
 
     module_dirs = []
 
-    for module, enabled_by_default in modules.iteritems():
+    for module, enabled_by_default in modules.items():
         enabled = _read_boolean(env, "nginx_enable_module_%s" % module, enabled_by_default)
         if enabled:
             module_dirs.append(eval("_get_nginx_module_%s" % module)(env))
@@ -520,8 +520,8 @@ def _configure_postgresql(env, delete_main_dbcluster=False):
             pg_ver = float(pg_ver)
             got_ver = True
         except Exception:
-            print(red("Problems trying to figure out PostgreSQL version."))
-            pg_ver = raw_input(red("Enter the correct one (eg, 9.1; not 9.1.3): "))
+            print((red("Problems trying to figure out PostgreSQL version.")))
+            pg_ver = input(red("Enter the correct one (eg, 9.1; not 9.1.3): "))
     if delete_main_dbcluster:
         env.safe_sudo('pg_dropcluster --stop %s main' % pg_ver, user='postgres')
     exp = "export PATH=/usr/lib/postgresql/%s/bin:$PATH" % pg_ver
