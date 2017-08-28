@@ -9,7 +9,7 @@ from string import Template
 import sys
 import tempfile
 from tempfile import NamedTemporaryFile
-import urllib.request, urllib.parse, urllib.error
+from six.moves import urllib
 import uuid
 import subprocess
 

@@ -12,8 +12,15 @@ Assumptions:
     do not require any form of authentication
 """
 
-import os, sys, yaml, urllib.request, urllib.error, urllib.parse, logging, hashlib, time, subprocess, random
-from urllib.parse import urlparse
+import os
+import sys
+import yaml
+import logging
+import hashlib
+import time
+import subprocess
+import random
+from six.moves import urllib
 
 from boto.s3.key import Key
 from boto.s3.connection import S3Connection
@@ -92,7 +99,7 @@ def _isurl(path):
     #       www.google.com will fail.
     #       Should we prepend the scheme for those that don't have it and
     #       test that also?
-    scheme, netloc, upath, uparams, uquery, ufrag = urlparse(path)
+    scheme, netloc, upath, uparams, uquery, ufrag = urllib.urlparse(path)
     return bool(scheme and netloc)
 
 def _get_s3_conn(ud):

@@ -8,11 +8,11 @@ The version information provides a reproducible dump of software on a system.
 import os
 import collections
 import inspect
-import urllib.request, urllib.error, urllib.parse
 import subprocess
 import sys
-import six
 import yaml
+import six
+from six.moves import urllib
 
 try:
     import yolk.yolklib

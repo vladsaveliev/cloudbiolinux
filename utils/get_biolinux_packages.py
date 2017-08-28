@@ -6,10 +6,10 @@ This needs to run on a machine with an apt system to check for the existance of
 package names.
 """
 import sys
-import urllib.request, urllib.error, urllib.parse
 import re
 import subprocess
 import io
+from six.moves import urllib
 
 from BeautifulSoup import BeautifulSoup
 
