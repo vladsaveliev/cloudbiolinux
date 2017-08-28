@@ -24,6 +24,8 @@ Usage:
 
     Files are stored at cheaper reduced redundancy storage by default.
 """
+from __future__ import print_function
+
 import os
 import sys
 import glob
@@ -42,9 +44,9 @@ def main(transfer_file, bucket_name, s3_key_name=None, use_rr=True,
     if s3_key_name is None:
         s3_key_name = os.path.basename(transfer_file)
     if profile is None:
-		conn = boto.connect_s3()
+        conn = boto.connect_s3()
     else:
-		conn = boto.connect_s3(profile_name=profile)
+        conn = boto.connect_s3(profile_name=profile)
     bucket = conn.lookup(bucket_name)
     if bucket is None:
         bucket = conn.create_bucket(bucket_name)
@@ -88,7 +90,8 @@ def _standard_transfer(bucket, s3_key_name, transfer_file, use_rr):
 def map_wrap(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        return apply(f, *args, **kwargs)
+        kwargs = args[1] if len(args) > 1 else dict()
+        return f(*args[0], **kwargs)
     return wrapper
 
 def mp_from_ids(mp_id, mp_keyname, mp_bucketname, profile=None):
@@ -98,9 +101,9 @@ def mp_from_ids(mp_id, mp_keyname, mp_bucketname, profile=None):
     from within multiprocessing functions.
     """
     if profile is None:
-		conn = boto.connect_s3()
+        conn = boto.connect_s3()
     else:
-		conn = boto.connect_s3(profile_name=profile)
+        conn = boto.connect_s3(profile_name=profile)
     bucket = conn.lookup(mp_bucketname)
     mp = boto.s3.multipart.MultiPartUpload(bucket)
     mp.key_name = mp_keyname
