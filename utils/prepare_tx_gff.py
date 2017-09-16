@@ -38,7 +38,7 @@ from bcbio.rnaseq.gtf import gtf_to_fasta
 from bcbio.distributed.transaction import file_transaction
 
 # ##  Version and retrieval details for Ensembl and UCSC
-ensembl_release = "79"
+ensembl_release = "87"
 base_ftp = "ftp://ftp.ensembl.org/pub/release-{release}/gtf"
 supported_oldbuilds = {"GRCh37": "75", "hg19": "75"}
 build_subsets = {"hg38-noalt": "hg38"}
@@ -272,32 +272,58 @@ def main(org_build, gtf_file, genome_fasta, genome_dir, cores):
     with chdir(work_dir):
         if not genome_fasta:
             genome_fasta = get_genome_fasta(org_build)
+        build = build_info[org_build]
         if not gtf_file:
-            write_version(build=build_info)
-            build = build_info[org_build]
-            gtf_file = prepare_tx_gff(build, org_build)
+            write_version(build=build)
+            print 'Downloading GTF for ' + org_build
+            gtf_file = _download_ensembl_gff(build, org_build)
         else:
+            print 'Input GTF file: ' + gtf_file
             write_version(gtf_file=gtf_file)
             work_gtf = os.path.join(work_dir, "ref-transcripts.gtf")
-            if not os.path.exists(work_gtf):
-                shutil.copy(gtf_file, work_gtf)
+            if os.path.exists(work_gtf):
+                os.remove(work_gtf)
+            print 'Copying to: ' + work_gtf
+            shutil.copy(gtf_file, work_gtf)
+            assert os.path.isfile(work_gtf), 'work_gtf ' + work_gtf
             gtf_file = work_gtf
+        print ''
+        print 'Remapping chromosome names in ' + os.path.abspath(gtf_file)
+        gtf_file = prepare_tx_gff(gtf_file, build, org_build)
+        print ''
+        print 'Cleaning records in ' + os.path.abspath(gtf_file)
         gtf_file = clean_gtf(gtf_file, genome_fasta)
+        print ''
+        print 'Preparing database for ' + os.path.abspath(gtf_file)
         db = _get_gtf_db(gtf_file)
-        os.remove(gtf_file)
+        print 'Done ' + str(db)
+        os.rename(gtf_file, gtf_file + '.ori')
+        print ''
+        print 'Extracting GTF back from db into ' + os.path.abspath(gtf_file)
         gtf_file = db_to_gtf(db, gtf_file)
+        print 'Writing refflat'
         gtf_to_refflat(gtf_file)
+        print 'Writing bed'
         gtf_to_bed(gtf_file)
+        print 'Prapring tx2gene'
         prepare_tx2gene(gtf_file)
+        print 'Prapring dexseq'
         prepare_dexseq(gtf_file)
+        print 'Prapring mask'
         mask_gff = prepare_mask_gtf(gtf_file)
+        print 'Prapring rrna'
         rrna_gtf = prepare_rrna_gtf(gtf_file)
         if file_exists(rrna_gtf):
             gtf_to_interval(rrna_gtf, genome_fasta)
+        print 'Prapring tophat index'
         prepare_tophat_index(gtf_file, org_build, genome_fasta)
+        print 'Prapring tx fasta'
         transcriptome_fasta = make_transcriptome_fasta(gtf_file, genome_fasta)
+        print 'Prapring kallisto index'
         prepare_kallisto_index(transcriptome_fasta, org_build)
+        print 'Prapring histat2'
         make_hisat2_splicesites(gtf_file)
+        print 'Cleaning up'
         cleanup(work_dir, out_dir, org_build)
         rnaseq_dir = os.path.join(build_dir, "rnaseq")
         if os.path.exists(rnaseq_dir):
@@ -308,7 +334,7 @@ def main(org_build, gtf_file, genome_fasta, genome_dir, cores):
         os.symlink(out_dir, rnaseq_dir)
 
     tar_dirs = [out_dir]
-    tarball = create_tarball(tar_dirs, org_build)
+    # tarball = create_tarball(tar_dirs, org_build)
 
 def make_hisat2_splicesites(gtf_file):
     base, _ = os.path.splitext(gtf_file)
@@ -338,6 +364,7 @@ def clean_gtf(gtf_file, genome_fasta):
     """
     temp_gtf = tempfile.NamedTemporaryFile(suffix=".gtf").name
     fa_names = get_fasta_names(genome_fasta)
+    print 'fa_names: ' + str(fa_names)
     with open(gtf_file) as in_gtf, open(temp_gtf, "w") as out_gtf:
         for line in in_gtf:
             if line.startswith("#"):
@@ -345,7 +372,9 @@ def clean_gtf(gtf_file, genome_fasta):
             # these cause problems with downstream tools and we don't use them
             if "Selenocysteine" in line:
                 continue
-            if line.split()[0].strip() not in fa_names:
+            chrom = line.split()[0].strip()
+            if chrom not in fa_names:
+                print 'Chromosome ' + chrom + ' not in fa_names in line: ' + line.strip()
                 continue
             if 'gene_id' not in line:
                 continue
@@ -639,24 +668,23 @@ def _biotype_lookup_fn(gtf):
     else:
         return None
 
-def prepare_tx_gff(build, org_name):
+def prepare_tx_gff(ensembl_gff, build, org_name):
     """Prepare UCSC ready transcript file given build information.
     """
-    ensembl_gff = _download_ensembl_gff(build, org_name)
     # if we need to do the name remapping
+    tx_gff = "ref-transcripts.ucsc.gtf"
+    if os.path.isfile(tx_gff):
+        os.remove(tx_gff)
     if build.ucsc_map:
         ucsc_name_map = build.ucsc_map(org_name)
-        tx_gff = _remap_gff(ensembl_gff, ucsc_name_map)
-        os.remove(ensembl_gff)
+        tx_gff = _remap_gff(ensembl_gff, ucsc_name_map, tx_gff)
     else:
-        tx_gff = "ref-transcripts.gtf"
         os.rename(ensembl_gff, tx_gff)
     return tx_gff
 
-def _remap_gff(base_gff, name_map):
+def _remap_gff(base_gff, name_map, out_file):
     """Remap chromosome names to UCSC instead of Ensembl
     """
-    out_file = "ref-transcripts.gtf"
     wrote_missing = set([])
     if not os.path.exists(out_file):
         with open(out_file, "w") as out_handle, \

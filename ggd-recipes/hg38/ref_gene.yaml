@@ -1,0 +1,15 @@
+# RefSeq genomic features (transcripts, exons and CDS). Used for BED files annotation.
+---
+attributes:
+  name: ref_gene
+  version: latest
+recipe:
+  full:
+    recipe_type: bash
+    recipe_cmds:
+      - |
+        baseurl=http://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/refGene.txt.gz
+        mkdir -p refseq
+        wget -c -N $baseurl -O refseq/ref_gene.txt.gz
+    recipe_outfiles:
+      - refseq/ref_gene.txt.gz
