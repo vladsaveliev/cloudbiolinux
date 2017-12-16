@@ -15,13 +15,13 @@ minimal:
   - xz
 # currently not included to reduce total size of Docker images
 # - pandoc
-# - viennarna
 bio_nextgen:
   - age-metasv
-  - bamtools
+  - atropos;env=python3
+  - bamtools=2.4.0
   - bamutil
   - bcbio-prioritize
-  - bcbio-rnaseq
+#  - bcbio-rnaseq
   - bcbio-variation
   - bcbio-variation-recall
   - bcbreport
@@ -29,41 +29,46 @@ bio_nextgen:
   - bedtools=2.26.0
   - biobambam
   - bowtie
-  - bowtie2=2.2.8
+#  - bowtie2=2.2.8
   - bwa
   - bwakit
   - bio-vcf
   - cage
   - cancerit-allelecount
+  - chipseq-greylist
   - cnvkit
-  - cpat
+  - coincbc
+#  - cpat
   - cramtools
-  - crossmap
+#  - crossmap
   - cufflinks
   - cutadapt
   - cyvcf2
   - delly
-  - dkfz-bias-filter
-  - ensembl-vep=89.*
+#  - dkfz-bias-filter
+  - ensembl-vep=90.*
+  - ericscript;env=samtools0
   - express
   - extract-sv-reads
   - fastqc
-  - fgbio
-  - freebayes=1.1.0
+#  - fgbio
+#  - freebayes=1.1.0.46
   - gatk
   - gatk-framework
   - gatk4
-  - geneimpacts
-  - gemini
+#  - geneimpacts
+#  - gemini
   - genesplicer
-  - glpk=4.57
+  - gffcompare
   - goleft
   - grabix
   - gridss
   - gsort
-  - svtools
+#  - svtools
   - gvcf-regions
-  - hap.py
+  - gvcftools
+#  - hap.py
+  - h5py
   - hmmlearn
   - hisat2
   - htslib
@@ -72,56 +77,62 @@ bio_nextgen:
   - kallisto
   - kraken
   - lofreq
-  - lumpy-sv
-  - macs2
-  - manta
+#  - lumpy-sv
+#  - macs2
+#  - manta
   - maxentscan
   - mbuffer
-  - metasv
+#  - metasv
+  - minimap2
   - mirdeep2=2.0.0.7
   - moreutils
+  - mosdepth
   - multiqc
   - multiqc-bcbio
   - ngs-disambiguate
   - novoalign
   - oncofuse
-  - optitype
+#  - optitype
   - parallel
   - pbgzip
   - perl-sanger-cgp-battenberg
-  - phylowgs
+#  - phylowgs
   - picard
   - pindel
-  - platypus-variant
+  - pizzly
+#  - platypus-variant
+  - preseq
   - pyloh
   - pytabix
   - pythonpy
   - qsignature
   - qualimap
   - rapmap
-  - razers3
+  - razers3=3.5.0
   - rtg-tools
   - sailfish
   - salmon
   - sambamba
   - samblaster
   - samtools
-  - simple_sv_annotation
   - scalpel
   - sentieon
   - seq2c
   - seqbuster
   - seqtk
   - sickle-trim
+  - simple_sv_annotation
+  - singlecell-barcodes
   - spades
   - snap-aligner=1.0dev.97
   - snpeff=4.3i
   - star
+  - strelka
   - stringtie
   - subread
-  - svtyper
-  - theta2
-  - tophat
+#  - svtyper
+#  - theta2
+#  - tophat
   - tophat-recondition
   - tdrmapper
   - ucsc-bedtobigbed
@@ -137,17 +148,20 @@ bio_nextgen:
   - ucsc-gtftogenepred
   - ucsc-liftover
   - ucsc-wigtobigwig
-  - umis
+#  - umis
   - wham
   - vardict
   - vardict-java
   - variantbam
   - varscan
-  - vawk
+#  - vawk
   - vcfanno
-  - vcf2db
+#  - vcf2db
   - vcflib
+  - viennarna
   - vt
+  - six
+  - future
 perl:
   - perl-app-cpanminus
   - perl-archive-extract
@@ -166,7 +180,7 @@ perl:
   - perl-time-hires
   - perl-vcftools-vcf
 r:
-  - r=3.3.2
+  - r=3.4.1
   - r-cghflasso
   - r-chbutils
   - r-devtools
@@ -203,3 +217,4 @@ r:
   - bioconductor-iranges
   - bioconductor-limma
   - bioconductor-rtracklayer
+  - bioconductor-titancna
